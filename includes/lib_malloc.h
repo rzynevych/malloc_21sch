@@ -7,6 +7,7 @@
 
 # define SMALL_BLOCK_TYPE 'S'
 # define SMALL_ALLOC_MULTIPLIER 8
+# define SYS_PAGE_MULTIPLIER 1
 
 # define TRUE 1
 # define FALSE 0
@@ -17,26 +18,24 @@ typedef char			t_bool;
 typedef struct  s_page
 {
 	struct s_page	*next;
-	struct s_page	*prev;
 	t_block			*blocks;
 	int				max_area;
+	t_block			*max_after;
+	char			type;
 }               	t_page;
 
 typedef struct			s_sys_page
 {
 	struct s_sys_page	*next;
-	struct s_sys_page	*prev;
 	int					blocks_count;
 }						t_sys_page;
 
 struct  s_block
 {
-	void			*data;
+	void			*ptr;
 	t_page			*page;
 	int				size;
-	char			type;
 	struct s_block	*next;
-	struct s_block	*prev;
 };
 
 typedef struct  s_malloc
