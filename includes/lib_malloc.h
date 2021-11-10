@@ -19,8 +19,9 @@ typedef struct  s_page
 {
 	struct s_page	*next;
 	t_block			*blocks;
+	t_block			*empty_blocks;
+	t_block			*max_empty;
 	int				max_area;
-	t_block			*max_after;
 	char			type;
 }               	t_page;
 
@@ -36,6 +37,7 @@ struct  s_block
 	t_page			*page;
 	int				size;
 	struct s_block	*next;
+	struct s_block	*prev;
 };
 
 typedef struct  s_malloc
