@@ -71,6 +71,8 @@ void		find_free_area(t_page *page, t_block *block, int size)
 {
 	t_block		*empty_block;
 	t_block		*prev;
+	t_sys_page	*sys_page_empty;
+
 
 	empty_block = page->empty_blocks;
 	prev = NULL;
@@ -82,27 +84,35 @@ void		find_free_area(t_page *page, t_block *block, int size)
 	empty_block->size -= size;
 	block->ptr = empty_block->ptr;
 	empty_block->ptr = (void *)(empty_block->ptr) + size;
-	if (empty_block->prev == NULL) 
-	{
-		if (page->blocks == NULL)
-			page->blocks = block;
-	}
+	empty_block->prev = block;
+	if (page->blocks == NULL)
+		page->blocks = block;
 	else
 	{
-		if (empty_block->size == 0)
+		if (empty_block->prev == NULL) 
 		{
-			empty_block->ptr = NULL;
-			if (prev != NULL)
-				prev->next = empty_block->next;
-			else
-				page->empty_blocks = empty_block->next;
-			if (empty_block->next != NULL)
-				empty_block->next->prev = block;
+			block->next = page->blocks;
+			page->blocks = block;
 		}
 		else
-		block->next = empty_block->prev->next;
-		empty_block->prev->next = block;
+		{
+			block->next = empty_block->prev->next;
+			empty_block->prev->next = block;
+			page->blocks = block;
+		}
 	}
+	if (empty_block->size == 0)
+	{
+		empty_block->ptr = NULL;
+		if (prev != NULL)
+			prev->next = empty_block->next;
+		else
+			page->empty_blocks = empty_block->next;
+		if (empty_block->next != NULL)
+			empty_block->next->prev = block;
+		sys_page_empty = (void *)empty_block - empty_block % g_malloc_data->pagesize;
+		sys_page_empty->blocks_count--;
+	}	
 	if (page->max_empty == empty_block)
 		set_max_area(page);
 }
