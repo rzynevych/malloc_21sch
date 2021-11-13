@@ -11,7 +11,7 @@ HEADER		=	includes/ft_malloc.h \
 				includes/lib_malloc.h
 
 
-CFLAGS = -I $(HEADER_DIR)
+CFLAGS = -g -I $(HEADER_DIR)
 
 OBJ = $(patsubst %.c,%.o,$(SRC))
 

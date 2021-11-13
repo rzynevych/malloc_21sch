@@ -4,6 +4,8 @@
 # include <sys/mman.h>
 # include <stdlib.h>
 # include <stdint.h>
+# include <unistd.h>
+# include <stdio.h>
 
 # define SMALL_BLOCK_TYPE 'S'
 # define SMALL_ALLOC_MULTIPLIER 8
@@ -22,7 +24,6 @@ typedef struct  s_page
 	t_block			*empty_blocks;
 	t_block			*max_empty;
 	int				max_area;
-	char			type;
 }               	t_page;
 
 typedef struct			s_sys_page
@@ -34,10 +35,9 @@ typedef struct			s_sys_page
 struct  s_block
 {
 	void			*ptr;
-	t_page			*page;
-	int				size;
 	struct s_block	*next;
 	struct s_block	*prev;
+    int				size;
 };
 
 typedef struct  s_malloc
@@ -49,8 +49,11 @@ typedef struct  s_malloc
 
 extern t_malloc		g_malloc_data;
 
-void    *default_mmap(size_t size);
-
-
+void	    ft_bzero(void *s, size_t n);
+void        *default_mmap(size_t size);
+t_sys_page  *init_sys_page();
+t_page      *init_user_page();
+void		*small_alloc(int size);
+void        *ft_malloc(size_t size);
 
 #endif
