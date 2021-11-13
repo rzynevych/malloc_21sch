@@ -42,9 +42,9 @@ struct  s_block
 
 typedef struct  s_malloc
 {
-	int		pagesize;
-	t_page  *small_malloc_data;
-	t_page	*small_user_data;
+	int		    pagesize;
+	t_sys_page  *small_malloc_data;
+	t_page	    *small_user_data;
 }               t_malloc;
 
 extern t_malloc		g_malloc_data;
