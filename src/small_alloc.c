@@ -62,8 +62,8 @@ t_page      *init_user_page()
 	page->next = NULL;
 	page->blocks = NULL;
     page->max_area = SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize - sizeof (t_page);
-    page->empty_blocks = init_free_block(sys_page, page, \
-    SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize - sizeof(t_page)); // Fixme
+    page->empty_blocks = init_free_block(sys_page, page,
+    		SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize - sizeof(t_page));
     page->max_empty = page->empty_blocks;
     if (page->empty_blocks == NULL)
     {
@@ -144,10 +144,10 @@ void		find_free_area(t_page *page, t_block *block, int size)
     if (empty_block->size == 0)
 	{
 		empty_block->ptr = NULL;
-		if (prev != NULL)
-			prev->next = empty_block->next;
-		else
+		if (prev == NULL)
 			page->empty_blocks = empty_block->next;
+		else
+			prev->next = empty_block->next;
 		if (empty_block->next != NULL)
 			empty_block->next->prev = block;
 		sys_page_empty = (void *)empty_block - (long long) empty_block % g_malloc_data.pagesize;

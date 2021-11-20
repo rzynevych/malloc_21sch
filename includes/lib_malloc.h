@@ -40,6 +40,17 @@ struct  s_block
     int				size;
 };
 
+typedef struct	s_ptrbox
+{
+	t_block		*block;
+	t_block		*prev;
+	t_block		*prev_free;
+	t_block		*next_free;
+	t_block		*freed;
+	t_page		*page;
+	t_page		*prev_page;
+}				t_ptrbox;
+
 typedef struct  s_malloc
 {
 	int		    pagesize;
