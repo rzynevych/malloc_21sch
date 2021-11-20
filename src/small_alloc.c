@@ -22,14 +22,15 @@ t_sys_page  *get_sys_page(t_sys_page *source)
     t_sys_page		*prev;
 
     page = source;
-    while (page != NULL && page->blocks_count == (g_malloc_data.pagesize - sizeof(t_page)) / sizeof(t_block))
+    while (page != NULL && page->blocks_count == (g_malloc_data.pagesize - sizeof(t_sys_page)) / sizeof(t_block))
     {
         prev = page;
         page = page->next;
     }
     if (page == NULL)
         return (prev);
-    return page;
+	prev->next = init_sys_page();
+    return (prev->next);
 }
 
 t_block		*init_free_block(t_sys_page *sys_page, t_page *page, int size)
@@ -57,7 +58,7 @@ t_page      *init_user_page()
 
     sys_page = get_sys_page(g_malloc_data.small_malloc_data);
 	page = (t_page *) default_mmap(SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize);
-	if (page == NULL)
+	if (sys_page == NULL || page == NULL)
 		return (NULL);
 	page->next = NULL;
 	page->blocks = NULL;
@@ -65,11 +66,6 @@ t_page      *init_user_page()
     page->empty_blocks = init_free_block(sys_page, page,
     		SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize - sizeof(t_page));
     page->max_empty = page->empty_blocks;
-    if (page->empty_blocks == NULL)
-    {
-        munmap(page, SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize);
-        return (NULL);
-    }
     return (page);
 }
 
@@ -180,13 +176,8 @@ void		*emplace_new_block(t_page *page, int size)
 	t_sys_page		*sys_page;
 
 	sys_page = get_sys_page(g_malloc_data.small_malloc_data);
-	if (sys_page->blocks_count == (g_malloc_data.pagesize - sizeof(t_page)) / sizeof(t_block))
-	{
-        sys_page->next = init_sys_page();
-		if (sys_page->next == NULL)
-			return NULL;
-		sys_page = sys_page->next;
-	}
+	if (sys_page == NULL)
+		return NULL;
 	return (init_block(sys_page, page, size));
 }
 

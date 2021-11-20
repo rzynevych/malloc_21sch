@@ -1,7 +1,7 @@
 #ifndef LIB_MALLOC_H
 # define LIB_MALLOC_H
 
-# include <sys/mman.h>
+// # include <sys/mman.h>
 # include <stdlib.h>
 # include <stdint.h>
 # include <unistd.h>
@@ -60,13 +60,17 @@ typedef struct  s_malloc
 extern t_malloc		g_malloc_data;
 
 void	    ft_bzero(void *s, size_t n);
+void		*ft_memcpy(void *dst, const void *src, size_t n);
 void        *default_mmap(size_t size);
 t_sys_page	*syspg_fblk(t_block *block);
 t_sys_page  *init_sys_page();
 t_page      *init_user_page();
 void		*small_alloc(int size);
+t_sys_page	*get_sys_page(t_sys_page *source);
+t_block		*init_free_block(t_sys_page *sys_page, t_page *page, int size);
 void        *ft_malloc(size_t size);
 void 		small_free(void *ptr, t_page *page, t_page *prev_page);
+void		decrease_blocks(t_sys_page *sys_page);
 void    	ft_free(void *ptr);
 
 #endif
