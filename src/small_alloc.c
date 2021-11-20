@@ -22,7 +22,7 @@ t_sys_page  *get_sys_page(t_sys_page *source)
     t_sys_page		*prev;
 
     page = source;
-    while (page != NULL && page->blocks_count == (g_malloc_data.pagesize * SYS_PAGE_MULTIPLIER - sizeof(t_page)) / sizeof(t_block))
+    while (page != NULL && page->blocks_count == (g_malloc_data.pagesize - sizeof(t_page)) / sizeof(t_block))
     {
         prev = page;
         page = page->next;
@@ -77,10 +77,10 @@ t_sys_page  *init_sys_page()
 {
 	t_sys_page	*sys_page;
 
-	sys_page = (t_sys_page *) default_mmap(SYS_PAGE_MULTIPLIER * g_malloc_data.pagesize);
+	sys_page = (t_sys_page *) default_mmap(g_malloc_data.pagesize);
 	if (sys_page == NULL)
 		return (NULL);
-    ft_bzero(sys_page, SYS_PAGE_MULTIPLIER * g_malloc_data.pagesize);
+    ft_bzero(sys_page, g_malloc_data.pagesize);
 	sys_page->blocks_count = 0;
 	sys_page->next = NULL;
 	return (sys_page);
@@ -150,7 +150,7 @@ void		find_free_area(t_page *page, t_block *block, int size)
 			prev->next = empty_block->next;
 		if (empty_block->next != NULL)
 			empty_block->next->prev = block;
-		sys_page_empty = (void *)empty_block - (long long) empty_block % g_malloc_data.pagesize;
+		sys_page_empty = syspg_fblk(empty_block);
 		sys_page_empty->blocks_count--;
 	}	
 	if (page->max_empty == empty_block)
@@ -180,7 +180,7 @@ void		*emplace_new_block(t_page *page, int size)
 	t_sys_page		*sys_page;
 
 	sys_page = get_sys_page(g_malloc_data.small_malloc_data);
-	if (sys_page->blocks_count == (g_malloc_data.pagesize * SYS_PAGE_MULTIPLIER - sizeof(t_page)) / sizeof(t_block))
+	if (sys_page->blocks_count == (g_malloc_data.pagesize - sizeof(t_page)) / sizeof(t_block))
 	{
         sys_page->next = init_sys_page();
 		if (sys_page->next == NULL)

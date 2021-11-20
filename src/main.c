@@ -2,10 +2,15 @@
 
 int main()
 {
-    void *p = ft_malloc(256);
-    void *p1 = ft_malloc(256);
-    printf("%p\n", p);
-    printf("%p\n", p1);
+	void	*arr[20];
+	int		i;
 
-    return 0;
+	for (i = 0; i < 5; i++)
+		arr[i] = ft_malloc(256);
+
+	ft_free(arr[0]);
+	ft_free(arr[2]);
+	ft_free(arr[1]);
+
+	return 0;
 }

@@ -2,19 +2,21 @@
 
 void		handle_blocks(t_ptrbox box)
 {
-	if (box.prev_free && box.block->ptr == box.prev_free + box.prev_free->size)
+	if (box.prev_free && box.block->ptr == box.prev_free->ptr + box.prev_free->size)
 	{
-		box.prev_free->size += block->size;
+		box.prev_free->size += box.block->size;
 		if (box.prev_block)
 			box.prev_block->next = box.block->next;
 		else
 			box.page->blocks = box.block->next;
 		box.block->ptr = NULL;
+		syspg_fblk(box.block)->blocks_count--;
 		if (box.next_free && box.block == box.next_free->prev)
 		{
 			box.prev_free->size += box.next_free->size;
 			box.prev_free->next = box.next_free->next;
 			box.next_free->ptr= NULL;
+			syspg_fblk(box.next_free)->blocks_count--;
 		}
 		box.freed = box.prev_free;
 	}
@@ -27,6 +29,7 @@ void		handle_blocks(t_ptrbox box)
 		else
 			box.page->blocks = box.block->next;
 		box.block->ptr = NULL;
+		syspg_fblk(box.block)->blocks_count--;
 		box.freed = box.next_free;
 	} else {
 		if (box.prev_block)
@@ -53,16 +56,10 @@ void		handle_blocks(t_ptrbox box)
 	}
 }
 
-void		free_block(t_block *block, t_block *prev, t_page *page)
+void		free_block(t_ptrbox box)
 {
-	t_ptrbox	box;
-
-	box.block = block;
-	box.page = page;
-	box.next_free = page->empty_blocks;
-	if (box.next_free == NULL)
-		return NULL;
-	while (box.next_free && box.next_free->ptr < block->ptr)
+	box.next_free = box.page->empty_blocks;
+	while (box.next_free && box.next_free->ptr < box.block->ptr)
 	{
 		box.prev_free = box.next_free;
 		box.next_free = box.next_free->next;
@@ -70,17 +67,19 @@ void		free_block(t_block *block, t_block *prev, t_page *page)
 	handle_blocks(box);
 }
 
-void 	*small_free(void *ptr, t_page *page)
+void 	small_free(void *ptr, t_page *page, t_page *prev_page)
 {
-	t_block *block;
-	t_block	*prev;
+	t_ptrbox box;
 
-	prev = NULL;
-	block = page->blocks;
-	while (block->ptr != ptr)
+	ft_bzero(&box, sizeof(t_ptrbox));
+	box.page = page;
+	box.prev_page = prev_page;
+	box.prev_block = NULL;
+	box.block = page->blocks;
+	while (box.block->ptr != ptr)
 	{
-		prev = block;
-		block = block->next;
+		box.prev_block = box.block;
+		box.block = box.block->next;
 	}
-	free_block(block, prev page);
+	free_block(box);
 }

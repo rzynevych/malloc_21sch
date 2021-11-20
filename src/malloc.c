@@ -14,7 +14,7 @@ t_bool   init_malloc()
     g_malloc_data.small_user_data = init_user_page();
     if (g_malloc_data.small_user_data == NULL)
     {
-        munmap(g_malloc_data.small_malloc_data, g_malloc_data.pagesize * SYS_PAGE_MULTIPLIER);
+        munmap(g_malloc_data.small_malloc_data, g_malloc_data.pagesize);
         g_malloc_data.pagesize = 0;
         return FALSE;
     }

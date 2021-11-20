@@ -3,6 +3,8 @@ CC = gcc
 
 SRC = src/main.c \
       src/malloc.c \
+      src/free.c \
+      src/small_free.c \
       src/small_alloc.c \
       src/utils.c
 

@@ -9,7 +9,6 @@
 
 # define SMALL_BLOCK_TYPE 'S'
 # define SMALL_ALLOC_MULTIPLIER 8
-# define SYS_PAGE_MULTIPLIER 1
 
 # define TRUE 1
 # define FALSE 0
@@ -43,7 +42,7 @@ struct  s_block
 typedef struct	s_ptrbox
 {
 	t_block		*block;
-	t_block		*prev;
+	t_block		*prev_block;
 	t_block		*prev_free;
 	t_block		*next_free;
 	t_block		*freed;
@@ -62,9 +61,12 @@ extern t_malloc		g_malloc_data;
 
 void	    ft_bzero(void *s, size_t n);
 void        *default_mmap(size_t size);
+t_sys_page	*syspg_fblk(t_block *block);
 t_sys_page  *init_sys_page();
 t_page      *init_user_page();
 void		*small_alloc(int size);
 void        *ft_malloc(size_t size);
+void 		small_free(void *ptr, t_page *page, t_page *prev_page);
+void    	ft_free(void *ptr);
 
 #endif
