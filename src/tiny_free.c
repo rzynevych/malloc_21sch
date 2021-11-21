@@ -14,7 +14,7 @@
 
 void	tiny_free(void *ptr, t_tiny_page *page, t_tiny_page *prev)
 {
-	long	index;
+	unsigned long	index;
 
 	index = (ptr - (void *)page - sizeof(t_tiny_page)) / TINY_SIZE;
 	set_bitmap((unsigned char *) &(page->bitmap), (int)index, 0);

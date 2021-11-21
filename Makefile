@@ -11,6 +11,7 @@ SRC = src/main.c \
       src/tiny_alloc.c \
       src/tiny_free.c \
       src/large.c \
+      src/show_alloc_mem.c \
       src/utils.c
 
 HEADER_DIR	=	includes/

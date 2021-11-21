@@ -113,6 +113,8 @@ void			*tiny_realloc(void *ptr, size_t size,
 void			tiny_free(void *ptr, t_tiny_page *page, t_tiny_page *prev);
 t_tiny_page		*init_tiny_page(void);
 void			set_bitmap(unsigned char *bitmap, int index, int val);
+void			*large_alloc(size_t size);
+void			large_free(t_large_page *page, t_large_page *prev_page);
 void			ft_free(void *ptr);
 
 #endif
