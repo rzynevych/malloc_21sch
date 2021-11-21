@@ -1,15 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: matruman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/21 19:40:26 by matruman          #+#    #+#             */
+/*   Updated: 2021/11/21 19:40:31 by matruman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lib_malloc.h"
 
 t_bool	ptr_in_page(t_page *page, void *ptr)
 {
-	return (t_bool) (ptr >= (void *) page + sizeof(t_page)
-			&& ptr < (void *) page + SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize);
+	return ((t_bool)(ptr >= (void *) page + sizeof(t_page)
+		&& ptr < (void *) page
+		+ SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize));
 }
 
 t_bool	tiny_search(void *ptr)
 {
-	t_tiny_page *page;
-	t_tiny_page *prev;
+	t_tiny_page		*page;
+	t_tiny_page		*prev;
 
 	prev = NULL;
 	page = g_malloc_data.tiny_malloc_data;
@@ -26,10 +39,10 @@ t_bool	tiny_search(void *ptr)
 	return (FALSE);
 }
 
-t_bool small_search(void *ptr)
+t_bool	small_search(void *ptr)
 {
-	t_page *page;
-	t_page *prev_page;
+	t_page		*page;
+	t_page		*prev_page;
 
 	prev_page = NULL;
 	page = g_malloc_data.small_user_data;
@@ -44,7 +57,7 @@ t_bool small_search(void *ptr)
 	return (TRUE);
 }
 
-void    ft_free(void *ptr)
+void	ft_free(void *ptr)
 {
 	if (!small_search(ptr))
 		tiny_search(ptr);

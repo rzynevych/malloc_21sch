@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lib_malloc.h                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: matruman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/21 19:48:46 by matruman          #+#    #+#             */
+/*   Updated: 2021/11/21 19:48:49 by matruman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef LIB_MALLOC_H
 # define LIB_MALLOC_H
 
@@ -18,6 +30,19 @@
 typedef struct s_block	t_block;
 typedef char			t_bool;
 
+typedef struct s_tiny_page
+{
+	struct s_tiny_page	*next;
+	int					used;
+	unsigned char		bitmap[TINY_BITMAP_SIZE];
+}						t_tiny_page;
+
+typedef struct s_large_page
+{
+	struct s_large_page	*next;
+	size_t				size;
+}						t_large_page;
+
 typedef struct s_page
 {
 	struct s_page	*next;
@@ -26,13 +51,6 @@ typedef struct s_page
 	t_block			*max_empty;
 	int				max_area;
 }					t_page;
-
-typedef struct s_tiny_page
-{
-	struct s_tiny_page	*next;
-	int					used;
-	unsigned char		bitmap[TINY_BITMAP_SIZE];
-}						t_tiny_page;
 
 typedef struct s_sys_page
 {
@@ -61,10 +79,12 @@ typedef struct s_ptrbox
 
 typedef struct s_malloc
 {
-	int			pagesize;
-	t_tiny_page	*tiny_malloc_data;
-	t_sys_page	*small_malloc_data;
-	t_page		*small_user_data;
+	int				pagesize;
+	t_tiny_page		*tiny_malloc_data;
+	t_sys_page		*small_malloc_data;
+	t_page			*small_user_data;
+	t_large_page	*large_malloc_data;
+	t_large_page	*last_large;
 }				t_malloc;
 
 extern	t_malloc

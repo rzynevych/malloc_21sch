@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   small_alloc.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: matruman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/21 19:42:27 by matruman          #+#    #+#             */
+/*   Updated: 2021/11/21 19:42:29 by matruman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lib_malloc.h"
 
-t_page		*get_page(int size, t_page *source)
+t_page	*get_page(int size, t_page *source)
 {
 	t_page		*page;
 	t_page		*prev;
@@ -13,16 +25,17 @@ t_page		*get_page(int size, t_page *source)
 	}
 	if (page == NULL)
 		return (prev);
-	return page;
+	return (page);
 }
 
-t_sys_page  *get_sys_page(t_sys_page *source)
+t_sys_page	*get_sys_page(t_sys_page *source)
 {
 	t_sys_page		*page;
 	t_sys_page		*prev;
 
 	page = source;
-	while (page != NULL && page->blocks_count == (g_malloc_data.pagesize - sizeof(t_sys_page)) / sizeof(t_block))
+	while (page != NULL && page->blocks_count
+		== (g_malloc_data.pagesize - sizeof(t_sys_page)) / sizeof(t_block))
 	{
 		prev = page;
 		page = page->next;
@@ -33,10 +46,10 @@ t_sys_page  *get_sys_page(t_sys_page *source)
 	return (prev->next);
 }
 
-t_block		*init_free_block(t_sys_page *sys_page, t_page *page, int size)
+t_block	*init_free_block(t_sys_page *sys_page, t_page *page, int size)
 {
 	t_block		*block;
-	int 		i;
+	int			i;
 
 	block = (void *)sys_page + sizeof(t_sys_page);
 	i = 0;
@@ -48,28 +61,30 @@ t_block		*init_free_block(t_sys_page *sys_page, t_page *page, int size)
 	block->prev = NULL;
 	block->size = size;
 	sys_page->blocks_count++;
-	return block;
+	return (block);
 }
 
-t_page      *init_user_page()
+t_page	*init_user_page(void)
 {
-	t_page	    *page;
-	t_sys_page  *sys_page;
+	t_page		*page;
+	t_sys_page	*sys_page;
 
 	sys_page = get_sys_page(g_malloc_data.small_malloc_data);
-	page = (t_page *) default_mmap(SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize);
+	page = (t_page *) default_mmap(
+			SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize);
 	if (sys_page == NULL || page == NULL)
 		return (NULL);
 	page->next = NULL;
 	page->blocks = NULL;
-	page->max_area = SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize - sizeof (t_page);
+	page->max_area = SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize
+		- sizeof (t_page);
 	page->empty_blocks = init_free_block(sys_page, page,
 			SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize - sizeof(t_page));
 	page->max_empty = page->empty_blocks;
 	return (page);
 }
 
-t_sys_page  *init_sys_page()
+t_sys_page	*init_sys_page(void)
 {
 	t_sys_page	*sys_page;
 
@@ -82,21 +97,21 @@ t_sys_page  *init_sys_page()
 	return (sys_page);
 }
 
-void		set_max_area(t_page *page)
+void	set_max_area(t_page *page)
 {
-	int		max_area;
-	t_block	*block;
-	t_block *max;
+	int			max_area;
+	t_block		*block;
+	t_block		*max;
 
 	block = page->empty_blocks;
 	max_area = block->size;
 	max = block;
-	while (block) 
+	while (block)
 	{
 		if (block->size < max_area)
 		{
 			max_area = block->size;
-			max= block;
+			max = block;
 		}
 		block = block->next;
 	}
@@ -104,7 +119,7 @@ void		set_max_area(t_page *page)
 	page->max_empty = max;
 }
 
-void		find_free_area(t_page *page, t_block *block, int size)
+void	find_free_area(t_page *page, t_block *block, int size)
 {
 	t_block		*empty_block;
 	t_block		*prev;
@@ -123,7 +138,7 @@ void		find_free_area(t_page *page, t_block *block, int size)
 		page->blocks = block;
 	else
 	{
-		if (empty_block->prev == NULL) 
+		if (empty_block->prev == NULL)
 		{
 			block->next = page->blocks;
 			page->blocks = block;
@@ -150,11 +165,11 @@ void		find_free_area(t_page *page, t_block *block, int size)
 		set_max_area(page);
 }
 
-void		*init_block(t_sys_page *sys_page, t_page *page, int size)
+void	*init_block(t_sys_page *sys_page, t_page *page, int size)
 {
 	t_block		*block;
-	int 		i;
-	
+	int			i;
+
 	block = (void *)sys_page + sizeof(t_sys_page);
 	i = 0;
 	while (block[i].ptr != 0)
@@ -167,20 +182,20 @@ void		*init_block(t_sys_page *sys_page, t_page *page, int size)
 	return (block->ptr);
 }
 
-void		*emplace_new_block(t_page *page, int size)
+void	*emplace_new_block(t_page *page, int size)
 {
 	t_sys_page		*sys_page;
 
 	sys_page = get_sys_page(g_malloc_data.small_malloc_data);
 	if (sys_page == NULL)
-		return NULL;
+		return (NULL);
 	return (init_block(sys_page, page, size));
 }
 
-
-void		*small_alloc(int size)
+void	*small_alloc(int size)
 {
-	t_page      *page;
+	t_page		*page;
+	void		*ptr;
 
 	page = get_page(size, g_malloc_data.small_user_data);
 	if (page->max_area < size)
@@ -190,6 +205,6 @@ void		*small_alloc(int size)
 			return (NULL);
 		page = page->next;
 	}
-	void *p = emplace_new_block(page, size);
-	return (p);
+	ptr = emplace_new_block(page, size);
+	return (ptr);
 }

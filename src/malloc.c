@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   malloc.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: matruman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/21 19:41:38 by matruman          #+#    #+#             */
+/*   Updated: 2021/11/21 19:41:51 by matruman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lib_malloc.h"
 
-t_malloc g_malloc_data = {};
+t_malloc	g_malloc_data = {};
 
-
-t_bool	init_malloc()
+t_bool	init_malloc(void)
 {
 	g_malloc_data.pagesize = getpagesize();
 	g_malloc_data.tiny_malloc_data = init_tiny_page();
@@ -18,9 +29,9 @@ t_bool	init_malloc()
 	{
 		munmap(g_malloc_data.small_malloc_data, g_malloc_data.pagesize);
 		g_malloc_data.pagesize = 0;
-		return FALSE;
+		return (FALSE);
 	}
-	return TRUE;
+	return (TRUE);
 }
 
 void	*ft_malloc(size_t size)
@@ -33,10 +44,10 @@ void	*ft_malloc(size_t size)
 	size += allign;
 	if (g_malloc_data.pagesize == 0)
 		if (init_malloc() == FALSE)
-			return NULL;
+			return (NULL);
 	if (size <= TINY_SIZE)
 		return (tiny_alloc());
 	else if (size <= LARGE_START)
 		return (small_alloc((int)size));
-	return NULL;
+	return (NULL);
 }

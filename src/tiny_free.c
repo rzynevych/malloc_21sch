@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tiny_free.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: matruman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/21 19:43:44 by matruman          #+#    #+#             */
+/*   Updated: 2021/11/21 19:43:47 by matruman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lib_malloc.h"
 
-void 	tiny_free(void *ptr, t_tiny_page *page, t_tiny_page *prev)
+void	tiny_free(void *ptr, t_tiny_page *page, t_tiny_page *prev)
 {
-	long index;
+	long	index;
 
-	index = (ptr - (void *)page) / TINY_SIZE;
+	index = (ptr - (void *)page - sizeof(t_tiny_page)) / TINY_SIZE;
 	set_bitmap((unsigned char *) &(page->bitmap), (int)index, 0);
 	page->used--;
 	if (page->used == 0 && page != g_malloc_data.tiny_malloc_data)
@@ -14,7 +26,8 @@ void 	tiny_free(void *ptr, t_tiny_page *page, t_tiny_page *prev)
 	}
 }
 
-void	*tiny_realloc(void *ptr, size_t size, t_tiny_page *page, t_tiny_page *prev)
+void	*tiny_realloc(void *ptr, size_t size,
+			t_tiny_page *page, t_tiny_page *prev)
 {
 	void	*res;
 

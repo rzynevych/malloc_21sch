@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   small_realloc.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: matruman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/21 19:43:06 by matruman          #+#    #+#             */
+/*   Updated: 2021/11/21 19:43:08 by matruman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lib_malloc.h"
 
-static void		handle_increase(t_ptrbox box, int size)
+static void	handle_increase(t_ptrbox box, int size)
 {
 	if (box.block->size + box.next_free->size == size)
 	{
@@ -12,14 +24,14 @@ static void		handle_increase(t_ptrbox box, int size)
 		decrease_blocks(syspg_fblk(box.next_free));
 		box.next_free->ptr = NULL;
 	}
-	else 
+	else
 	{
 		box.next_free->size = box.block->size + box.next_free->size - size;
 		box.block->size = size;
 	}
 }
 
-static void		*increase_size(t_ptrbox box, int size)
+static void	*increase_size(t_ptrbox box, int size)
 {
 	void	*ptr;
 
@@ -29,7 +41,8 @@ static void		*increase_size(t_ptrbox box, int size)
 		box.prev_free = box.next_free;
 		box.next_free = box.next_free->next;
 	}
-	if (box.next_free && box.next_free->prev == box.block && box.block->size + box.next_free->size >= size)
+	if (box.next_free && box.next_free->prev == box.block
+		&& box.block->size + box.next_free->size >= size)
 	{
 		handle_increase(box, size);
 		return (box.block->ptr);
@@ -43,7 +56,7 @@ static void		*increase_size(t_ptrbox box, int size)
 	}
 }
 
-static void		*decrease_size(t_ptrbox box, int size)
+static void	*decrease_size(t_ptrbox box, int size)
 {
 	t_sys_page	*sys_page;
 
@@ -63,7 +76,7 @@ static void		*decrease_size(t_ptrbox box, int size)
 	return (box.block->ptr);
 }
 
-void			*small_realloc(void	*ptr, int size, t_page *page, t_page *prev_page)
+void	*small_realloc(void	*ptr, int size, t_page *page, t_page *prev_page)
 {
 	t_ptrbox	box;
 

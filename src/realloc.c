@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   realloc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: matruman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/21 19:42:14 by matruman          #+#    #+#             */
+/*   Updated: 2021/11/21 19:42:17 by matruman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lib_malloc.h"
 
-t_bool 	small_search(void *ptr, void **res, int size)
+static t_bool	small_search(void *ptr, void **res, int size)
 {
 	t_page	*page;
 	t_page	*prev_page;
@@ -20,10 +32,10 @@ t_bool 	small_search(void *ptr, void **res, int size)
 	return (FALSE);
 }
 
-t_bool	tiny_search(void *ptr, void **res, int size)
+static t_bool	tiny_search(void *ptr, void **res, int size)
 {
-	t_tiny_page *page;
-	t_tiny_page *prev;
+	t_tiny_page		*page;
+	t_tiny_page		*prev;
 
 	prev = NULL;
 	page = g_malloc_data.tiny_malloc_data;
@@ -40,9 +52,9 @@ t_bool	tiny_search(void *ptr, void **res, int size)
 	return (FALSE);
 }
 
-void 	*ft_realloc(void *ptr, size_t size)
+void	*ft_realloc(void *ptr, size_t size)
 {
-	void 	*res;
+	void	*res;
 
 	if (small_search(ptr, &res, (int) size))
 		return (res);

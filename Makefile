@@ -10,14 +10,14 @@ SRC = src/main.c \
       src/small_realloc.c \
       src/tiny_alloc.c \
       src/tiny_free.c \
+      src/large.c \
       src/utils.c
 
 HEADER_DIR	=	includes/
 HEADER		=	includes/ft_malloc.h \
 				includes/lib_malloc.h
 
-
-CFLAGS = -g -I $(HEADER_DIR)
+CFLAGS = -Wall -Wextra -Werror -g -I $(HEADER_DIR)
 
 OBJ = $(patsubst %.c,%.o,$(SRC))
 

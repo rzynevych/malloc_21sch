@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tiny_alloc.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: matruman <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/21 19:43:31 by matruman          #+#    #+#             */
+/*   Updated: 2021/11/21 19:43:33 by matruman         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lib_malloc.h"
 
-void 	set_bitmap(unsigned char *bitmap, int index, int val)
+void	set_bitmap(unsigned char *bitmap, int index, int val)
 {
 	unsigned char	c;
 	unsigned char	mask;
-	int		i;
+	int				i;
 
 	c = bitmap[index / 8];
 	mask = 1;
@@ -14,7 +26,8 @@ void 	set_bitmap(unsigned char *bitmap, int index, int val)
 		mask *= 2;
 		i++;
 	}
-	if (val == 0) {
+	if (val == 0)
+	{
 		mask = ~mask;
 		bitmap[index / 8] = c & mask;
 	}
@@ -22,23 +35,20 @@ void 	set_bitmap(unsigned char *bitmap, int index, int val)
 		bitmap[index / 8] = c | mask;
 }
 
-int		get_index(unsigned char c)
+int	get_index(unsigned char c)
 {
-	int		d;
 	int		i;
 
-	d = 2;
 	i = 0;
-	while (c % d != 0)
+	while (c % 2 != 0)
 	{
-		c /= d;
-		d *= 2;
+		c /= 2;
 		i++;
 	}
 	return (i);
 }
 
-t_tiny_page		*init_tiny_page()
+t_tiny_page	*init_tiny_page(void)
 {
 	t_tiny_page	*page;
 
@@ -51,13 +61,14 @@ t_tiny_page		*init_tiny_page()
 	return (page);
 }
 
-t_tiny_page		*get_tiny_page()
+t_tiny_page	*get_tiny_page(void)
 {
-	t_tiny_page	*page;
-	t_tiny_page *prev;
+	t_tiny_page		*page;
+	t_tiny_page		*prev;
 
 	page = g_malloc_data.tiny_malloc_data;
-	while (page && page->used == g_malloc_data.pagesize - sizeof(t_tiny_page) / TINY_SIZE)
+	while (page && page->used == g_malloc_data.pagesize
+		- sizeof(t_tiny_page) / TINY_SIZE)
 	{
 		prev = page;
 		page = page->next;
@@ -68,11 +79,11 @@ t_tiny_page		*get_tiny_page()
 	return (prev->next);
 }
 
-void 	*tiny_alloc()
+void	*tiny_alloc(void)
 {
 	t_tiny_page		*page;
 	int				index;
-	int 			i;
+	int				i;
 
 	page = get_tiny_page();
 	if (page == NULL)
