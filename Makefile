@@ -3,9 +3,11 @@ CC = gcc
 
 SRC = src/main.c \
       src/malloc.c \
+      src/realloc.c \
       src/free.c \
       src/small_free.c \
       src/small_alloc.c \
+      src/small_realloc.c \
       src/utils.c
 
 HEADER_DIR	=	includes/

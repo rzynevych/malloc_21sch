@@ -1,13 +1,12 @@
 #ifndef LIB_MALLOC_H
 # define LIB_MALLOC_H
 
-// # include <sys/mman.h>
+# include <sys/mman.h>
 # include <stdlib.h>
 # include <stdint.h>
 # include <unistd.h>
 # include <stdio.h>
 
-# define SMALL_BLOCK_TYPE 'S'
 # define SMALL_ALLOC_MULTIPLIER 8
 
 # define TRUE 1
@@ -69,7 +68,9 @@ void		*small_alloc(int size);
 t_sys_page	*get_sys_page(t_sys_page *source);
 t_block		*init_free_block(t_sys_page *sys_page, t_page *page, int size);
 void        *ft_malloc(size_t size);
+t_bool		ptr_in_page(t_page *page, void *ptr);
 void 		small_free(void *ptr, t_page *page, t_page *prev_page);
+void		*small_realloc(void	*ptr, int size, t_page *page, t_page *prev_page);
 void		decrease_blocks(t_sys_page *sys_page);
 void    	ft_free(void *ptr);
 

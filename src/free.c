@@ -2,7 +2,7 @@
 
 t_bool	ptr_in_page(t_page *page, void *ptr)
 {
-	return (ptr >= (void *) page + sizeof(t_page) 
+	return (t_bool) (ptr >= (void *) page + sizeof(t_page)
 			&& ptr < (void *) page + SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize);
 }
 
