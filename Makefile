@@ -8,6 +8,8 @@ SRC = src/main.c \
       src/small_free.c \
       src/small_alloc.c \
       src/small_realloc.c \
+      src/tiny_alloc.c \
+      src/tiny_free.c \
       src/utils.c
 
 HEADER_DIR	=	includes/

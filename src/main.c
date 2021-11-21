@@ -8,9 +8,9 @@ int main()
 	for (i = 0; i < 5; i++)
 		arr[i] = ft_malloc(256);
 
-	ft_free(arr[0]);
-	ft_free(arr[2]);
 	ft_free(arr[1]);
+
+	ft_realloc(arr[0], 512);
 
 	return 0;
 }

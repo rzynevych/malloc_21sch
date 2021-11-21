@@ -36,8 +36,8 @@ static void		*increase_size(t_ptrbox box, int size)
 	}
 	else
 	{
-		ptr = small_alloc(size);
-		ft_memcpy(ptr, box.block->ptr, size);
+		ptr = ft_malloc(size);
+		ft_memcpy(ptr, box.block->ptr, box.block->size);
 		small_free(box.block->ptr, box.page, box.prev_page);
 		return (ptr);
 	}

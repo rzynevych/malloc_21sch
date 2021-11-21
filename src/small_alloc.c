@@ -152,7 +152,6 @@ void		find_free_area(t_page *page, t_block *block, int size)
 
 void		*init_block(t_sys_page *sys_page, t_page *page, int size)
 {
-
 	t_block		*block;
 	int 		i;
 	
