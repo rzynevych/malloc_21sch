@@ -12,6 +12,23 @@
 
 #include "lib_malloc.h"
 
+void	ft_putchar(char c)
+{
+	write(1, &c, 1);
+}
+
+void	ft_putstr(char const *s)
+{
+	int	i;
+
+	if (!s)
+		return ;
+	i = 0;
+	while (s[i])
+		i++;
+	write(1, s, i);
+}
+
 void	ft_bzero(void *s, size_t n)
 {
 	size_t	i;
@@ -37,6 +54,21 @@ void	*ft_memcpy(void *dst, const void *src, size_t n)
 		i++;
 	}
 	return (dst);
+}
+
+int		ft_pow2(int pow)
+{
+	int		i;
+	int		n;
+
+	i = 0;
+	n = 1;
+	while (i < pow)
+	{
+		n *= 2;
+		i++;
+	}
+	return n;
 }
 
 t_sys_page	*syspg_fblk(t_block *block)

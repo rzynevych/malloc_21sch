@@ -13,7 +13,7 @@
 #ifndef LIB_MALLOC_H
 # define LIB_MALLOC_H
 
-# include <sys/mman.h>
+// # include <sys/mman.h>
 # include <stdlib.h>
 # include <stdint.h>
 # include <unistd.h>
@@ -92,6 +92,11 @@ extern	t_malloc
 
 void			ft_bzero(void *s, size_t n);
 void			*ft_memcpy(void *dst, const void *src, size_t n);
+void			ft_putchar(char c);
+void			ft_putstr(char const *s);
+int				ft_pow2(int pow);
+void			print_addr(void *ptr);
+void			print_uint64_t(uint64_t n);
 void			*default_mmap(size_t size);
 t_sys_page		*syspg_fblk(t_block *block);
 t_sys_page		*init_sys_page(void);

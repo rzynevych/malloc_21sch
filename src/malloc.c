@@ -49,5 +49,5 @@ void	*ft_malloc(size_t size)
 		return (tiny_alloc());
 	else if (size <= LARGE_START)
 		return (small_alloc((int)size));
-	return (NULL);
+	return (large_alloc(size));
 }
