@@ -34,9 +34,9 @@ static void	show_tiny_page(t_tiny_page *page, size_t *total)
 		{
 			if (page->bitmap[i] & ft_pow2(j))
 			{
-				print_addr((size_t) page + (i * 8 + j) * TINY_SIZE);
+				print_addr((void *) page + sizeof(t_tiny_page) + (i * 8 + j) * TINY_SIZE);
 				ft_putstr(" - ");
-				print_addr((size_t) page + (i * 8 + j + 1) * TINY_SIZE - 1);
+				print_addr((void *) page + sizeof(t_tiny_page) + (i * 8 + j + 1) * TINY_SIZE - 1);
 				ft_putstr(" : ");
 				print_uint64_t(TINY_SIZE);
 				ft_putstr(" bytes\n");
@@ -51,7 +51,7 @@ static void	show_tiny_page(t_tiny_page *page, size_t *total)
 static size_t	show_tiny(void)
 {
 	t_tiny_page		*page;
-	uint64_t		total;
+	size_t			total;
 
 	total = 0;
 	page = g_malloc_data.tiny_malloc_data;
@@ -87,7 +87,9 @@ static size_t	show_small(void)
 			print_uint64_t(block->size);
 			ft_putstr(" bytes\n");
 			total += block->size;
+			block = block->next;
 		}
+		page = page->next;
 	}
 	ft_putstr("\nTotal: ");
 	print_uint64_t(total);
@@ -102,18 +104,21 @@ static size_t	show_large(void)
 
 	total = 0;
 	page = g_malloc_data.large_malloc_data;
+	if (page == NULL)
+		return (0);
 	while (page)
 	{
 		ft_putstr("LARGE : ");
 		print_addr(page);
 		ft_putstr("\n");
-		print_addr((size_t) page + sizeof(t_large_page));
+		print_addr((void *) page + sizeof(t_large_page));
 		ft_putstr(" - ");
-		print_addr((size_t) page + page->size - 1);
+		print_addr((void *) page + page->size - 1);
 		ft_putstr(" : ");
 		print_uint64_t(page->size - sizeof(t_large_page));
 		ft_putstr(" bytes\n");
 		total += (page->size - sizeof(t_large_page));
+		page = page->next;
 	}
 	ft_putstr("\nTotal: ");
 	print_uint64_t(total);

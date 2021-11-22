@@ -13,7 +13,7 @@
 #ifndef LIB_MALLOC_H
 # define LIB_MALLOC_H
 
-// # include <sys/mman.h>
+# include <sys/mman.h>
 # include <stdlib.h>
 # include <stdint.h>
 # include <unistd.h>
@@ -121,5 +121,6 @@ void			set_bitmap(unsigned char *bitmap, int index, int val);
 void			*large_alloc(size_t size);
 void			large_free(t_large_page *page, t_large_page *prev_page);
 void			ft_free(void *ptr);
+void			show_alloc_mem(void);
 
 #endif

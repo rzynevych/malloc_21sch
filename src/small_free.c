@@ -108,10 +108,12 @@ void	small_free(void *ptr, t_page *page, t_page *prev_page)
 	box.prev_page = prev_page;
 	box.prev_block = NULL;
 	box.block = page->blocks;
-	while (box.block->ptr != ptr)
+	while (box.block && box.block->ptr != ptr)
 	{
 		box.prev_block = box.block;
 		box.block = box.block->next;
 	}
+	if (box.block == NULL)
+		return ;
 	free_block(box);
 }
