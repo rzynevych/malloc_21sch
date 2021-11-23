@@ -18,7 +18,7 @@ t_page	*get_page(size_t size, t_page *source)
 
 void	set_max_area(t_page *page)
 {
-	int			max_area;
+	size_t		max_area;
 	t_block		*block;
 	t_block		*max;
 

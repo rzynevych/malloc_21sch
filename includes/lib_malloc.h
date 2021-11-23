@@ -13,7 +13,7 @@
 #ifndef LIB_MALLOC_H
 # define LIB_MALLOC_H
 
-// # include <sys/mman.h>
+# include <sys/mman.h>
 # include <stdlib.h>
 # include <stdint.h>
 # include <unistd.h>
@@ -22,7 +22,7 @@
 # define TINY_SIZE 32
 # define TINY_BITMAP_SIZE 16
 # define SMALL_ALLOC_MULTIPLIER 8
-# define LARGE_START 0x1000
+# define LARGE_START 0x2000
 
 # define TRUE 1
 # define FALSE 0
@@ -49,7 +49,7 @@ typedef struct s_page
 	t_block			*blocks;
 	t_block			*empty_blocks;
 	t_block			*max_empty;
-	int				max_area;
+	size_t			max_area;
 }					t_page;
 
 typedef struct s_sys_page
@@ -106,10 +106,10 @@ t_page			*init_user_page(void);
 t_sys_page		*get_sys_page(t_sys_page *source);
 t_block			*init_free_block(t_sys_page *sys_page,
 					t_page *page, size_t size);
-void			*small_alloc(int size);
+void			*small_alloc(size_t size);
 t_bool			ptr_in_page(t_page *page, void *ptr);
 void			small_free(void *ptr, t_page *page, t_page *prev_page);
-void			*small_realloc(void	*ptr, int size,
+void			*small_realloc(void	*ptr, size_t size,
 					t_page *page, t_page *prev_page);
 void			decrease_blocks(t_sys_page *sys_page);
 void			*tiny_alloc(void);

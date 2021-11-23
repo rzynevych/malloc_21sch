@@ -2,21 +2,22 @@
 
 int main()
 {
-	void	*arr[20];
+	void	*arr[1000];
 	int		i;
 
-	for (i = 0; i < 30; i++)
-		arr[i] = ft_malloc(4000);
+	t_malloc *malloc_data = &g_malloc_data;
+
+	for (i = 0; i < 20; i++)
+		arr[i] = ft_malloc(8000);
+
+	show_alloc_mem();	
 
 	for (i = 0; i < 40; i++)
 		ft_free(arr[i]);
 
-	// ft_free(arr[1]);
-	// arr[1] = ft_malloc(16);
-
-	ft_realloc(arr[0], 512);
-
 	show_alloc_mem();
+
+	// show_alloc_mem();
 
 	return 0;
 }

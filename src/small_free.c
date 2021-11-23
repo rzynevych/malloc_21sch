@@ -77,6 +77,8 @@ static void	handle_blocks(t_ptrbox box)
 			&& box.page != g_malloc_data.small_user_data)
 		{
 			box.prev_page->next = box.page->next;
+			box.page->empty_blocks->ptr = NULL;
+			decrease_blocks(syspg_fblk(box.page->empty_blocks));
 			munmap(box.page, SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize);
 		}
 	}

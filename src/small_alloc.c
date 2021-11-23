@@ -13,7 +13,7 @@
 #include "lib_malloc.h"
 
 static void	handle_blocks(t_page *page, t_block *block,
-			t_block *empty_block, t_block *prev_empty)
+			t_block *empty_block)
 {
 	if (page->blocks == NULL)
 		page->blocks = block;
@@ -64,7 +64,8 @@ static void	find_free_area(t_page *page, t_block *block, size_t size)
 	empty_block->size -= size;
 	block->ptr = empty_block->ptr;
 	empty_block->ptr = (void *)(empty_block->ptr) + size;
-	handle_blocks(page, block, empty_block, prev_empty);
+	handle_blocks(page, block, empty_block);
+	handle_zero(page, block, empty_block, prev_empty);
 	if (page->max_empty == empty_block)
 		set_max_area(page);
 }
@@ -86,7 +87,7 @@ static void	*init_block(t_sys_page *sys_page, t_page *page, size_t size)
 	return (block->ptr);
 }
 
-void	*small_alloc(int size)
+void	*small_alloc(size_t size)
 {
 	t_sys_page		*sys_page;
 	t_page		*page;
