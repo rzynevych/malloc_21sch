@@ -12,7 +12,7 @@
 
 #include "lib_malloc.h"
 
-static void	handle_increase(t_ptrbox box, int size)
+static void	handle_increase(t_ptrbox box, size_t size)
 {
 	if (box.block->size + box.next_free->size == size)
 	{
@@ -31,7 +31,7 @@ static void	handle_increase(t_ptrbox box, int size)
 	}
 }
 
-static void	*increase_size(t_ptrbox box, int size)
+static void	*increase_size(t_ptrbox box, size_t size)
 {
 	void	*ptr;
 
@@ -56,7 +56,7 @@ static void	*increase_size(t_ptrbox box, int size)
 	}
 }
 
-static void	*decrease_size(t_ptrbox box, int size)
+static void	*decrease_size(t_ptrbox box, size_t size)
 {
 	t_sys_page	*sys_page;
 
@@ -79,7 +79,7 @@ static void	*decrease_size(t_ptrbox box, int size)
 	return (box.block->ptr);
 }
 
-void	*small_realloc(void	*ptr, int size, t_page *page, t_page *prev_page)
+void	*small_realloc(void	*ptr, size_t size, t_page *page, t_page *prev_page)
 {
 	t_ptrbox	box;
 

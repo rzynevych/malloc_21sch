@@ -48,6 +48,6 @@ void	*ft_malloc(size_t size)
 	if (size <= TINY_SIZE)
 		return (tiny_alloc());
 	else if (size <= LARGE_START)
-		return (small_alloc((int)size));
+		return (small_alloc((size)));
 	return (large_alloc(size));
 }

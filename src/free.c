@@ -57,8 +57,30 @@ t_bool	small_search(void *ptr)
 	return (TRUE);
 }
 
+t_bool	large_search(void *ptr)
+{
+	t_large_page	*page;
+	t_large_page	*prev_page;
+	
+	prev_page = NULL;
+	page = g_malloc_data.large_malloc_data;
+	while (page && ptr - sizeof(t_large_page) != (void *)page)
+	{
+		prev_page = page;
+		page = page->next;
+	}
+	if (!page)
+		return (FALSE);
+	large_free(page, prev_page);
+	return (TRUE);
+}
+
 void	ft_free(void *ptr)
 {
+
+	if ((size_t)(ptr - sizeof(t_large_page)) % g_malloc_data.pagesize == 0)
+		if (large_search(ptr))
+			return ;
 	if (!small_search(ptr))
 		tiny_search(ptr);
 }
