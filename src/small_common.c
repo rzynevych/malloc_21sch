@@ -23,6 +23,12 @@ void	set_max_area(t_page *page)
 	t_block		*max;
 
 	block = page->empty_blocks;
+	if (block == NULL)
+	{
+		page->max_area = 0;
+		page->max_empty = NULL;
+		return ;
+	}
 	max_area = block->size;
 	max = block;
 	while (block)

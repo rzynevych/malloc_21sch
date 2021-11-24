@@ -37,9 +37,11 @@ t_bool	init_malloc(void)
 void	*ft_malloc(size_t size)
 {
 	size_t	allign;
+	size_t	word_lendth;
 
-	allign = (8 - size % 8);
-	if (size % 8 == 0)
+	word_lendth = sizeof(size_t);
+	allign = (word_lendth - size % word_lendth);
+	if (size % word_lendth == 0)
 		allign = 0;
 	size += allign;
 	if (g_malloc_data.pagesize == 0)

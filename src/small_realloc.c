@@ -27,6 +27,7 @@ static void	handle_increase(t_ptrbox box, size_t size)
 	else
 	{
 		box.next_free->size = box.block->size + box.next_free->size - size;
+		box.next_free->ptr = box.block->ptr + size;
 		box.block->size = size;
 	}
 }
@@ -69,13 +70,22 @@ static void	*decrease_size(t_ptrbox box, size_t size)
 		box.prev_free = box.next_free;
 		box.next_free = box.next_free->next;
 	}
-	box.freed = init_free_block(sys_page, box.page, box.block->size - size);
-	if (box.prev_free)
-        box.prev_free->next = box.freed;
-    else
-        box.page->empty_blocks = box.freed;
-	box.freed->next = box.next_free;
-	box.block->size = size;
+	if (box.next_free->prev == box.block)
+	{
+		box.next_free->size = box.block->size + box.next_free->size - size;
+		box.next_free->ptr = box.block->ptr + size;
+		box.block->size = size;
+	}
+	else
+	{
+		box.freed = init_free_block(sys_page, box.page, box.block->size - size);
+		if (box.prev_free)
+			box.prev_free->next = box.freed;
+		else
+			box.page->empty_blocks = box.freed;
+		box.freed->next = box.next_free;
+		box.block->size = size;
+	}
 	return (box.block->ptr);
 }
 

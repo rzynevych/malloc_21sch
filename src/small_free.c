@@ -40,6 +40,7 @@ static void	handle_next(t_ptrbox *box)
 	else
 		box->page->blocks = box->block->next;
 	box->block->ptr = NULL;
+	box->next_free->prev = box->prev_block;
 	decrease_blocks(syspg_fblk(box->block));
 	box->freed = box->next_free;
 }
@@ -64,7 +65,7 @@ static void	handle_blocks(t_ptrbox box)
 	if (box.prev_free && box.block->ptr
 		== box.prev_free->ptr + box.prev_free->size)
 		handle_prev(&box);
-	else if (box.block == box.next_free->prev)
+	else if (box.next_free && box.block == box.next_free->prev)
 		handle_next(&box);
 	else
 		handle_current(&box);

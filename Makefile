@@ -14,12 +14,12 @@ SRC = src/main.c \
       src/tiny_free.c \
       src/large.c \
       src/show_alloc_mem.c \
-	  src/print.c \
+	src/print.c \
       src/utils.c
 
 HEADER_DIR	=	includes/
-HEADER		=	includes/ft_malloc.h \
-				includes/lib_malloc.h
+HEADER	=	includes/ft_malloc.h \
+			includes/lib_malloc.h
 
 CFLAGS = -g -I $(HEADER_DIR)
 
