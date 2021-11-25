@@ -33,7 +33,9 @@ void	*tiny_realloc(void *ptr, size_t size,
 {
 	void	*res;
 
-	if (size <= 0)
+	if ((size_t)(ptr - (void *)page - sizeof(t_tiny_page)) % TINY_SIZE != 0)
+		return (NULL);
+	if (size == 0)
 	{
 		tiny_free(ptr, page, prev);
 		return (NULL);
@@ -42,7 +44,7 @@ void	*tiny_realloc(void *ptr, size_t size,
 		return (ptr);
 	else
 	{
-		res = ft_malloc(size);
+		res = malloc(size);
 		ft_memcpy(res, ptr, TINY_SIZE);
 		tiny_free(ptr, page, prev);
 		return (res);

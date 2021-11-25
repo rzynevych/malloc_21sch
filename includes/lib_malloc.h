@@ -97,6 +97,7 @@ void			*ft_memcpy(void *dst, const void *src, size_t n);
 void			ft_putchar(char c);
 void			ft_putstr(char const *s);
 int				ft_pow2(int pow);
+void			print_header(const char *s, void *addr);
 void			print_addr(void *ptr);
 void			print_uint64_t(uint64_t n);
 void			*default_mmap(size_t size);
@@ -125,9 +126,12 @@ void			large_free(t_large_page *page, t_large_page *prev_page);
 void			*large_realloc(void *ptr, size_t size, t_large_page *page,
 					t_large_page *prev_page);
 
-void			*ft_malloc(size_t size);
-void			*ft_realloc(void *ptr, size_t size);
-void			ft_free(void *ptr);
+void			*malloc(size_t size);
+void			*realloc(void *ptr, size_t size);
+void			free(void *ptr);
 void			show_alloc_mem(void);
+
+void	p(char *s);
+
 
 #endif

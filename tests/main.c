@@ -15,24 +15,24 @@ int main()
 	t_malloc 		*malloc_data = &g_malloc_data;
 
 	for (i = 0; i < COUNT; i++)
-		arr[i] = ft_malloc(5000);
+		arr[i] = malloc(16);
 
-	arr[0] = ft_realloc(arr[0], 10000);
+	arr[0] = realloc(arr[0], 10);
 
-	arr[2] = ft_realloc(arr[2], 10000);
+	arr[2] = realloc(arr[2], 100);
 
-	arr[4] = ft_realloc(arr[4], 10000);
+	arr[4] = realloc(arr[4], 10000);
 
-	arr[0] = ft_realloc(arr[0], 5000);
+	arr[0] = realloc(arr[0], 2);
 
-	arr[2] = ft_realloc(arr[2], 5000);
+	arr[2] = realloc(arr[2], 2);
 
-	arr[4] = ft_realloc(arr[4], 5000);
+	arr[4] = realloc(arr[4], 2);
 
 	show_alloc_mem();
 
 	for (i = COUNT; i >= 0; i--)
-		ft_free(arr[i]);
+		free(arr[i]);
 
 	show_alloc_mem();
 

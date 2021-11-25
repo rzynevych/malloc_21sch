@@ -1,7 +1,12 @@
-NAME = malloc_test
+ifeq ($(HOSTTYPE),)
+	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
+
+NAME =		libft_malloc_$(HOSTTYPE).so
+SL_NAME =	libft_malloc.so
 CC = gcc
 
-SRC = src/main.c \
+SRC = src/libft.c \
       src/malloc.c \
       src/realloc.c \
       src/free.c \
@@ -18,12 +23,11 @@ SRC = src/main.c \
       src/utils.c
 
 HEADER_DIR	=	includes/
-HEADER	=	includes/ft_malloc.h \
-			includes/lib_malloc.h
+HEADER	=	includes/lib_malloc.h
 
-CFLAGS = -g -I $(HEADER_DIR)
+CFLAGS = -Wall -Wextra -Werror -I $(HEADER_DIR)
 
-OBJ = $(patsubst %.c,%.o,$(SRC))
+OBJ = $(SRC:.c=.o)
 
 %.o: %.c $(HEADER)
 	$(CC) -c $(CFLAGS) $< -o $@
@@ -31,12 +35,14 @@ OBJ = $(patsubst %.c,%.o,$(SRC))
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -shared -fPIC -o $(NAME)
+	ln -fs ${NAME} ${SL_NAME}
 
 clean:
 	rm -f $(OBJ)
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f $(SL_NAME)
 
 re: fclean all

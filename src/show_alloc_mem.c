@@ -12,19 +12,8 @@
 
 #include "lib_malloc.h"
 
-static void	print_header(const char *s, void *addr)
+static void	show_tiny_page(t_tiny_page *page, size_t *total, int i, int j)
 {
-	ft_putstr(s);
-	ft_putstr(" : ");
-	print_addr(addr);
-	ft_putstr("\n");
-}
-
-static void	show_tiny_page(t_tiny_page *page, size_t *total)
-{
-	int				i;
-	int				j;
-
 	i = 0;
 	print_header("TINY", page);
 	while (i < TINY_BITMAP_SIZE)
@@ -34,9 +23,11 @@ static void	show_tiny_page(t_tiny_page *page, size_t *total)
 		{
 			if (page->bitmap[i] & ft_pow2(j))
 			{
-				print_addr((void *) page + sizeof(t_tiny_page) + (i * 8 + j) * TINY_SIZE);
+				print_addr((void *) page + sizeof(t_tiny_page)
+					+ (i * 8 + j) * TINY_SIZE);
 				ft_putstr(" - ");
-				print_addr((void *) page + sizeof(t_tiny_page) + (i * 8 + j + 1) * TINY_SIZE - 1);
+				print_addr((void *) page + sizeof(t_tiny_page)
+					+ (i * 8 + j + 1) * TINY_SIZE - 1);
 				ft_putstr(" : ");
 				print_uint64_t(TINY_SIZE);
 				ft_putstr(" bytes\n");
@@ -57,7 +48,7 @@ static size_t	show_tiny(void)
 	page = g_malloc_data.tiny_malloc_data;
 	while (page)
 	{
-		show_tiny_page(page, &total);
+		show_tiny_page(page, &total, 0, 0);
 		page = page->next;
 	}
 	ft_putstr("Total tiny: ");
@@ -66,12 +57,8 @@ static size_t	show_tiny(void)
 	return (total);
 }
 
-static size_t	show_small(void)
+static size_t	show_small(t_page *page, t_block *block, size_t total)
 {
-	t_page		*page;
-	t_block		*block;
-	size_t		total;
-
 	total = 0;
 	page = g_malloc_data.small_user_data;
 	while (page)
@@ -126,13 +113,13 @@ static size_t	show_large(void)
 	return (total);
 }
 
-void			show_alloc_mem(void)
+void	show_alloc_mem(void)
 {
 	size_t	total;
 
 	total = 0;
 	total += show_tiny();
-	total += show_small();
+	total += show_small(NULL, NULL, 0);
 	total += show_large();
 	ft_putstr("Total: ");
 	print_uint64_t(total);

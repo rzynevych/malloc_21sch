@@ -19,7 +19,7 @@ t_bool	ptr_in_page(t_page *page, void *ptr)
 		+ SMALL_ALLOC_MULTIPLIER * g_malloc_data.pagesize));
 }
 
-t_bool	tiny_search(void *ptr)
+static t_bool	tiny_search(void *ptr)
 {
 	t_tiny_page		*page;
 	t_tiny_page		*prev;
@@ -39,7 +39,7 @@ t_bool	tiny_search(void *ptr)
 	return (FALSE);
 }
 
-t_bool	small_search(void *ptr)
+static t_bool	small_search(void *ptr)
 {
 	t_page		*page;
 	t_page		*prev_page;
@@ -57,11 +57,11 @@ t_bool	small_search(void *ptr)
 	return (TRUE);
 }
 
-t_bool	large_search(void *ptr)
+static t_bool	large_search(void *ptr)
 {
 	t_large_page	*page;
 	t_large_page	*prev_page;
-	
+
 	prev_page = NULL;
 	page = g_malloc_data.large_malloc_data;
 	while (page && ptr - sizeof(t_large_page) != (void *)page)
@@ -75,12 +75,14 @@ t_bool	large_search(void *ptr)
 	return (TRUE);
 }
 
-void	ft_free(void *ptr)
+void	free(void *ptr)
 {
-
+//	print_addr(ptr);
+//	p(": free");
 	if ((size_t)(ptr - sizeof(t_large_page)) % g_malloc_data.pagesize == 0)
 		if (large_search(ptr))
 			return ;
 	if (!small_search(ptr))
 		tiny_search(ptr);
+//	p("free success");
 }

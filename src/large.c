@@ -64,17 +64,23 @@ size_t	get_copy_size(size_t mmap_size, t_large_page *page)
 void	*large_realloc(void *ptr, size_t size, t_large_page *page,
 			t_large_page *prev_page)
 {
-	void 			*res;
+	void			*res;
 	size_t			mmap_size;
 	size_t			copy_size;
 
+//	p("large start");
+	if (size == 0)
+	{
+		large_free(page, prev_page);
+		return (NULL);
+	}
 	mmap_size = size + sizeof(t_large_page);
 	if (mmap_size % g_malloc_data.pagesize != 0)
 		mmap_size = (mmap_size / g_malloc_data.pagesize + 1)
 			* g_malloc_data.pagesize;
-	if (mmap_size == page->size)
-		return (ptr);	
-	res = ft_malloc(size);
+	if (size >= LARGE_START && mmap_size == page->size)
+		return (ptr);
+	res = malloc(size);
 	copy_size = get_copy_size(mmap_size, page);
 	ft_memcpy(res, ptr, copy_size);
 	large_free(page, prev_page);

@@ -89,10 +89,11 @@ static void	*init_block(t_sys_page *sys_page, t_page *page, size_t size)
 
 void	*small_alloc(size_t size)
 {
-	t_sys_page		*sys_page;
+	t_sys_page	*sys_page;
 	t_page		*page;
 	void		*ptr;
 
+//	p("small start");
 	page = get_page(size, g_malloc_data.small_user_data);
 	if (page->max_area < size)
 	{

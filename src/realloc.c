@@ -17,6 +17,8 @@ static t_bool	tiny_search(void *ptr, void **res, int size)
 	t_tiny_page		*page;
 	t_tiny_page		*prev;
 
+//	p("realloc tiny start");
+
 	prev = NULL;
 	page = g_malloc_data.tiny_malloc_data;
 	while (page && page != (ptr - (uint64_t) ptr % g_malloc_data.pagesize))
@@ -35,6 +37,7 @@ static t_bool	small_search(void *ptr, void **res, size_t size)
 	t_page	*page;
 	t_page	*prev_page;
 
+//	p("realloc small start");
 	page = g_malloc_data.small_user_data;
 	prev_page = NULL;
 	while (page && !ptr_in_page(page, ptr))
@@ -52,7 +55,8 @@ static t_bool	large_search(void *ptr, void **res, size_t size)
 {
 	t_large_page	*page;
 	t_large_page	*prev_page;
-	
+
+//	p("realloc large start");
 	prev_page = NULL;
 	page = g_malloc_data.large_malloc_data;
 	while (page && ptr - sizeof(t_large_page) != (void *)page)
@@ -66,11 +70,16 @@ static t_bool	large_search(void *ptr, void **res, size_t size)
 	return (TRUE);
 }
 
-void	*ft_realloc(void *ptr, size_t size)
+void	*realloc(void *ptr, size_t size)
 {
 	void	*res;
 	size_t	align;
 
+//	print_addr(ptr);
+//	p(": realloc start");
+
+	if (ptr == NULL)
+		return (malloc(size));
 	align = (WORD_LENGTH - size % WORD_LENGTH);
 	if (size % WORD_LENGTH == 0)
 		align = 0;

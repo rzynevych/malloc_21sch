@@ -18,15 +18,22 @@ t_bool	init_malloc(void)
 {
 	g_malloc_data.pagesize = getpagesize();
 	g_malloc_data.tiny_malloc_data = init_tiny_page();
+	if (g_malloc_data.tiny_malloc_data == NULL)
+	{
+		g_malloc_data.pagesize = 0;
+		return (FALSE);
+	}
 	g_malloc_data.small_malloc_data = init_sys_page();
 	if (g_malloc_data.small_malloc_data == NULL)
 	{
+		munmap(g_malloc_data.tiny_malloc_data, g_malloc_data.pagesize);
 		g_malloc_data.pagesize = 0;
 		return (FALSE);
 	}
 	g_malloc_data.small_user_data = init_user_page();
 	if (g_malloc_data.small_user_data == NULL)
 	{
+		munmap(g_malloc_data.tiny_malloc_data, g_malloc_data.pagesize);
 		munmap(g_malloc_data.small_malloc_data, g_malloc_data.pagesize);
 		g_malloc_data.pagesize = 0;
 		return (FALSE);
@@ -34,20 +41,22 @@ t_bool	init_malloc(void)
 	return (TRUE);
 }
 
-void	*ft_malloc(size_t size)
+void	*malloc(size_t size)
 {
-	size_t	align;
+//	p("malloc start");
+//	print_uint64_t(size);
+//	p(": malloc size");
 
-	align = (WORD_LENGTH - size % WORD_LENGTH);
-	if (size % WORD_LENGTH == 0)
-		align = 0;
-	size += align;
+	if (size == 0)
+		size += WORD_LENGTH;
+	if (size % WORD_LENGTH != 0)
+		size = (size / WORD_LENGTH + 1) * WORD_LENGTH;
 	if (g_malloc_data.pagesize == 0)
 		if (init_malloc() == FALSE)
 			return (NULL);
 	if (size <= TINY_SIZE)
 		return (tiny_alloc());
-	else if (size <= LARGE_START)
+	if (size <= LARGE_START)
 		return (small_alloc((size)));
 	return (large_alloc(size));
 }

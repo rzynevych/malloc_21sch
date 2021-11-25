@@ -68,7 +68,7 @@ t_tiny_page	*get_tiny_page(void)
 
 	page = g_malloc_data.tiny_malloc_data;
 	while (page && page->used == (g_malloc_data.pagesize
-		- sizeof(t_tiny_page)) / TINY_SIZE)
+			- sizeof(t_tiny_page)) / TINY_SIZE)
 	{
 		prev = page;
 		page = page->next;
@@ -84,7 +84,9 @@ void	*tiny_alloc(void)
 	t_tiny_page		*page;
 	int				index;
 	int				i;
+	void 			*ptr;
 
+//	p("tiny start");
 	page = get_tiny_page();
 	if (page == NULL)
 		return (NULL);
@@ -94,5 +96,7 @@ void	*tiny_alloc(void)
 	index = i * 8 + get_index(page->bitmap[i]);
 	page->used++;
 	set_bitmap((unsigned char *) &(page->bitmap), index, 1);
-	return ((void *) page + sizeof(t_tiny_page) + TINY_SIZE * index);
+	ptr = (void *) page + sizeof(t_tiny_page) + TINY_SIZE * index;
+
+	return (ptr);
 }
