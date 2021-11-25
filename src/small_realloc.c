@@ -79,6 +79,7 @@ static void	*decrease_size(t_ptrbox box, size_t size)
 	else
 	{
 		box.freed = init_free_block(sys_page, box.page, box.block->size - size);
+		box.freed->ptr = box.block->ptr + size;
 		if (box.prev_free)
 			box.prev_free->next = box.freed;
 		else
@@ -97,7 +98,7 @@ void	*small_realloc(void	*ptr, size_t size, t_page *page, t_page *prev_page)
 	box.page = page;
 	box.prev_page = prev_page;
 	if (ptr == NULL)
-		return (small_alloc(size));
+		return (ft_malloc(size));
 	box.block = page->blocks;
 	while (box.block && box.block->ptr != ptr)
 		box.block = box.block->next;
@@ -107,7 +108,7 @@ void	*small_realloc(void	*ptr, size_t size, t_page *page, t_page *prev_page)
 		return (increase_size(box, size));
 	else if (box.block->size > size && size > 0)
 		return (decrease_size(box, size));
-	else if (size == 0)
+	else if (size <= 0)
 	{
 		small_free(ptr, page, prev_page);
 		return (NULL);

@@ -22,7 +22,9 @@
 # define TINY_SIZE 32
 # define TINY_BITMAP_SIZE 16
 # define SMALL_ALLOC_MULTIPLIER 8
-# define LARGE_START 0x2000
+# define LARGE_START 0x1000
+
+# define WORD_LENGTH 8
 
 # define TRUE 1
 # define FALSE 0

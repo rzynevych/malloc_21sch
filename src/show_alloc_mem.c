@@ -60,9 +60,9 @@ static size_t	show_tiny(void)
 		show_tiny_page(page, &total);
 		page = page->next;
 	}
-	ft_putstr("\nTotal: ");
+	ft_putstr("Total tiny: ");
 	print_uint64_t(total);
-	ft_putstr(" bytes\n");
+	ft_putstr(" bytes\n\n");
 	return (total);
 }
 
@@ -91,9 +91,9 @@ static size_t	show_small(void)
 		}
 		page = page->next;
 	}
-	ft_putstr("\nTotal: ");
+	ft_putstr("Total small: ");
 	print_uint64_t(total);
-	ft_putstr(" bytes\n");
+	ft_putstr(" bytes\n\n");
 	return (total);
 }
 
@@ -120,9 +120,9 @@ static size_t	show_large(void)
 		total += (page->size - sizeof(t_large_page));
 		page = page->next;
 	}
-	ft_putstr("\nTotal: ");
+	ft_putstr("Total large: ");
 	print_uint64_t(total);
-	ft_putstr(" bytes\n");
+	ft_putstr(" bytes\n\n");
 	return (total);
 }
 
@@ -132,11 +132,9 @@ void			show_alloc_mem(void)
 
 	total = 0;
 	total += show_tiny();
-	ft_putstr("\n");
 	total += show_small();
-	ft_putstr("\n");
 	total += show_large();
-	ft_putstr("\nTotal: ");
+	ft_putstr("Total: ");
 	print_uint64_t(total);
-	ft_putstr(" bytes\n");
+	ft_putstr(" bytes\n\n");
 }

@@ -69,9 +69,13 @@ static t_bool	large_search(void *ptr, void **res, size_t size)
 void	*ft_realloc(void *ptr, size_t size)
 {
 	void	*res;
+	size_t	align;
 
+	align = (WORD_LENGTH - size % WORD_LENGTH);
+	if (size % WORD_LENGTH == 0)
+		align = 0;
+	size += align;
 	res = NULL;
-
 	if ((size_t)(ptr - sizeof(t_large_page)) % g_malloc_data.pagesize == 0)
 		if (large_search(ptr, &res, size))
 			return (res);

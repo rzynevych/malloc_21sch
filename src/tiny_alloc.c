@@ -67,8 +67,8 @@ t_tiny_page	*get_tiny_page(void)
 	t_tiny_page		*prev;
 
 	page = g_malloc_data.tiny_malloc_data;
-	while (page && page->used == g_malloc_data.pagesize
-		- sizeof(t_tiny_page) / TINY_SIZE)
+	while (page && page->used == (g_malloc_data.pagesize
+		- sizeof(t_tiny_page)) / TINY_SIZE)
 	{
 		prev = page;
 		page = page->next;
