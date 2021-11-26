@@ -15,25 +15,20 @@
 static void	handle_blocks(t_page *page, t_block *block,
 			t_block *empty_block)
 {
-	if (page->blocks == NULL)
+	if (empty_block->prev == NULL)
+	{
+		block->next = page->blocks;
 		page->blocks = block;
+	}
 	else
 	{
-		if (empty_block->prev == NULL)
-		{
-			block->next = page->blocks;
-			page->blocks = block;
-		}
-		else
-		{
-			block->next = empty_block->prev->next;
-			empty_block->prev->next = block;
-		}
+		block->next = empty_block->prev->next;
+		empty_block->prev->next = block;
 	}
 	empty_block->prev = block;
 }
 
-static void	handle_zero(t_page *page, t_block *block,
+static void	handle_zero(t_page *page,
 			t_block *empty_block, t_block *prev_empty)
 {
 	if (empty_block->size == 0)
@@ -43,8 +38,6 @@ static void	handle_zero(t_page *page, t_block *block,
 			page->empty_blocks = empty_block->next;
 		else
 			prev_empty->next = empty_block->next;
-		if (empty_block->next != NULL)
-			empty_block->next->prev = block;
 		decrease_blocks(syspg_fblk(empty_block));
 	}	
 }
@@ -63,9 +56,9 @@ static void	find_free_area(t_page *page, t_block *block, size_t size)
 	}
 	empty_block->size -= size;
 	block->ptr = empty_block->ptr;
-	empty_block->ptr = (void *)(empty_block->ptr) + size;
+	empty_block->ptr = empty_block->ptr + size;
 	handle_blocks(page, block, empty_block);
-	handle_zero(page, block, empty_block, prev_empty);
+	handle_zero(page, empty_block, prev_empty);
 	if (page->max_empty == empty_block)
 		set_max_area(page);
 }
@@ -93,7 +86,6 @@ void	*small_alloc(size_t size)
 	t_page		*page;
 	void		*ptr;
 
-//	p("small start");
 	page = get_page(size, g_malloc_data.small_user_data);
 	if (page->max_area < size)
 	{

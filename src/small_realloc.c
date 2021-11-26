@@ -21,8 +21,8 @@ static void	handle_increase(t_ptrbox box, size_t size)
 			box.prev_free->next = box.next_free->next;
 		else
 			box.page->empty_blocks = box.next_free->next;
-		decrease_blocks(syspg_fblk(box.next_free));
 		box.next_free->ptr = NULL;
+		decrease_blocks(syspg_fblk(box.next_free));
 	}
 	else
 	{
@@ -73,6 +73,7 @@ static void	*handle_free_block(t_ptrbox *box, size_t size)
 	else
 		box->page->empty_blocks = box->freed;
 	box->freed->next = box->next_free;
+	box->freed->prev = box->block;
 	box->block->size = size;
 	if (box->freed->size > box->page->max_area)
 	{
